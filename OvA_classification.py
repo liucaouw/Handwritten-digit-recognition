@@ -54,7 +54,7 @@ def accuracy(OVA, X, y):
     
     return r
 
-def gradientDescent(grad, w0, *args, **kwargs):
+def gradientDescent(grad, w0, X, y):
 	max_iter = 5000
 	alpha = 0.001
 	eps = 10^(-5)
@@ -62,7 +62,7 @@ def gradientDescent(grad, w0, *args, **kwargs):
 	w = w0
 	iter = 0
 	while True:
-		gradient = grad(w, *args)
+		gradient = grad(w, X, y)
 		w = w - alpha * gradient
 
 		if iter > max_iter or np.linalg.norm(gradient) < eps:
@@ -94,19 +94,19 @@ def oneVersusAll(Y, value):
 
 if __name__=="__main__":
 
-	trainX, trainY = readData('MNIST_data/MNIST_train_data.csv')
-
+    trainX, trainY = readData('MNIST_data/MNIST_train_data.csv')
+ 
 	# training individual classifier
-	Nfeature = trainX.shape[1]
-	Nclass = 10
-	OVA = np.zeros((Nfeature, Nclass))
-	for i in range(Nclass):
-		print("Training for class " + str(i))
-		w0 = np.random.rand(Nfeature, 1)
-		OVA[:, i:i+1] = gradientDescent(softmaxGrad, w0, trainX, oneVersusAll(trainY, i))
+    Nfeature = trainX.shape[1]
+    Nclass = 10
+    OVA = np.zeros((Nfeature, Nclass))
+    for i in range(Nclass):
+        print("Training for class " + str(i))
+        w0 = np.random.rand(Nfeature, 1)
+        OVA[:, i:i+1] = gradientDescent(softmaxGrad, w0, trainX, oneVersusAll(trainY, i))
 
 
-	print("Accuracy for training set is: %f" % accuracy(OVA, trainX, trainY))
+    print("Accuracy for training set is: %f" % accuracy(OVA, trainX, trainY))
 
-	testX, testY = readData('MNIST_data/MNIST_test_data.csv')
-	print("Accuracy for test set is: %f" % accuracy(OVA, testX, testY))
+    testX, testY = readData('MNIST_data/MNIST_test_data.csv')
+    print("Accuracy for test set is: %f" % accuracy(OVA, testX, testY))
